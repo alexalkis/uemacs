@@ -15,10 +15,11 @@
 
 #if     ANSI
 
-#define NROW    25		/* Screen size.                 */
+#define NROW    30		/* Screen size.                 */
 #define NCOL    80		/* Edit if you want to.         */
 
 #if	PKCODE
+
 #define	MROW	64
 #endif
 #define	NPAUSE	100		/* # times thru update to pause */
@@ -27,21 +28,23 @@
 #define BEL     0x07		/* BEL character.               */
 #define ESC     0x1B		/* ESC character.               */
 
-extern int ttopen();		/* Forward references.          */
-extern int ttgetc();
-extern int ttputc();
-extern int ttflush();
-extern int ttclose();
-extern int ansimove();
-extern int ansieeol();
-extern int ansieeop();
-extern int ansibeep();
-extern int ansiopen();
-extern int ansirev();
-extern int ansiclose();
-extern int ansikopen();
-extern int ansikclose();
-extern int ansicres();
+void ansiparm(int n);
+
+extern void ttopen(void);		/* Forward references.          */
+extern int ttgetc(void);
+extern int ttputc(int);
+extern void ttflush(void);
+extern void ttclose(void);
+extern void ansimove(int, int);
+extern void ansieeol(void);
+extern void ansieeop(void);
+extern void ansibeep(void);
+extern void ansiopen(void);
+extern void ansirev(int);
+extern void ansiclose(void);
+extern void ansikopen(void);
+extern void ansikclose(void);
+extern int ansicres(char *);
 
 #if	COLOR
 extern int ansifcol();
@@ -120,7 +123,7 @@ void ansibcol(int color)
 }
 #endif
 
-ansimove(row, col)
+void ansimove(int row, int col)
 {
 	ttputc(ESC);
 	ttputc('[');
@@ -174,7 +177,7 @@ void ansirev(int state)
 }
 
 /* Change screen resolution. */
-int ansicres()
+int ansicres(char *s)
 {
 	return TRUE;
 }

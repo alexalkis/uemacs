@@ -22,6 +22,13 @@ static char *pathname[] =
 };
 #endif
 
+#if AMIGA
+{
+	".emacsrc", "emacs.hlp",
+        ""
+};
+#endif
+
 #if	V7 | BSD | USG
 {
 	".emacsrc", "emacs.hlp",

@@ -7,7 +7,7 @@
  *
  *	modified by Petri Kutvonen
  */
-
+#ifndef AMIGA
 #define	termdef	1		/* don't define "term" external */
 
 #include        <stdio.h>
@@ -493,3 +493,4 @@ void scwrite(int row, char *outstr, int forg, int bacg)
 }
 
 #endif
+#endif /* !AMIGA */

@@ -5,12 +5,15 @@
  *	<odified by Petri Kutvonen
  */
 
+
 #include <stdio.h>
 #include <unistd.h>
 
 #include "estruct.h"
 #include "edef.h"
 #include "efunc.h"
+
+#ifndef AMIGA
 
 #if     VMS
 #define EFN     0		/* Event flag.          */
@@ -378,90 +381,6 @@ int pipecmd(int f, int n)
 	return TRUE;
 }
 
-/*
- * filter a buffer through an external DOS program
- * Bound to ^X #
- */
-int filter_buffer(int f, int n)
-{
-	int s;		/* return status from CLI */
-	struct buffer *bp;	/* pointer to buffer to zot */
-	char line[NLINE];	/* command line send to shell */
-	char tmpnam[NFILEN];	/* place to store real file name */
-	static char bname1[] = "fltinp";
-
-	static char filnam1[] = "fltinp";
-	static char filnam2[] = "fltout";
-
-	/* don't allow this command if restricted */
-	if (restflag)
-		return resterr();
-
-	if (curbp->b_mode & MDVIEW)	/* don't allow this command if      */
-		return rdonly();	/* we are in read only mode     */
-
-#if     VMS
-	mlwrite("Not available under VMS");
-	return FALSE;
-#endif
-
-	/* get the filter name and its args */
-	if ((s = mlreply("#", line, NLINE)) != TRUE)
-		return s;
-
-	/* setup the proper file names */
-	bp = curbp;
-	strcpy(tmpnam, bp->b_fname);	/* save the original name */
-	strcpy(bp->b_fname, bname1);	/* set it to our new one */
-
-	/* write it out, checking for errors */
-	if (writeout(filnam1) != TRUE) {
-		mlwrite("(Cannot write filter file)");
-		strcpy(bp->b_fname, tmpnam);
-		return FALSE;
-	}
-#if     MSDOS
-	strcat(line, " <fltinp >fltout");
-	movecursor(term.t_nrow - 1, 0);
-	TTkclose();
-	shellprog(line);
-	TTkopen();
-	sgarbf = TRUE;
-	s = TRUE;
-#endif
-
-#if     V7 | USG | BSD
-	TTputc('\n');		/* Already have '\r'    */
-	TTflush();
-	TTclose();		/* stty to old modes    */
-	TTkclose();
-	strcat(line, " <fltinp >fltout");
-	system(line);
-	TTopen();
-	TTkopen();
-	TTflush();
-	sgarbf = TRUE;
-	s = TRUE;
-#endif
-
-	/* on failure, escape gracefully */
-	if (s != TRUE || (readin(filnam2, FALSE) == FALSE)) {
-		mlwrite("(Execution failed)");
-		strcpy(bp->b_fname, tmpnam);
-		unlink(filnam1);
-		unlink(filnam2);
-		return s;
-	}
-
-	/* reset file name */
-	strcpy(bp->b_fname, tmpnam);	/* restore name */
-	bp->b_flag |= BFCHG;	/* flag it as changed */
-
-	/* and get rid of the temporary file */
-	unlink(filnam1);
-	unlink(filnam2);
-	return TRUE;
-}
 
 #if     VMS
 /*
@@ -627,3 +546,89 @@ int execprog(char *cmd)
 	return (rval < 0) ? FALSE : TRUE;
 }
 #endif
+#endif /* !AMIGA */
+
+/*
+ * filter a buffer through an external DOS program
+ * Bound to ^X #
+ */
+int filter_buffer(int f, int n)
+{
+	int s;		/* return status from CLI */
+	struct buffer *bp;	/* pointer to buffer to zot */
+	char line[NLINE];	/* command line send to shell */
+	char tmpnam[NFILEN];	/* place to store real file name */
+	static char bname1[] = "fltinp";
+
+	static char filnam1[] = "fltinp";
+	static char filnam2[] = "fltout";
+
+	/* don't allow this command if restricted */
+	if (restflag)
+		return resterr();
+
+	if (curbp->b_mode & MDVIEW)	/* don't allow this command if      */
+		return rdonly();	/* we are in read only mode     */
+
+#if     VMS
+	mlwrite("Not available under VMS");
+	return FALSE;
+#endif
+
+	/* get the filter name and its args */
+	if ((s = mlreply("#", line, NLINE)) != TRUE)
+		return s;
+
+	/* setup the proper file names */
+	bp = curbp;
+	strcpy(tmpnam, bp->b_fname);	/* save the original name */
+	strcpy(bp->b_fname, bname1);	/* set it to our new one */
+
+	/* write it out, checking for errors */
+	if (writeout(filnam1) != TRUE) {
+		mlwrite("(Cannot write filter file)");
+		strcpy(bp->b_fname, tmpnam);
+		return FALSE;
+	}
+#if     MSDOS
+	strcat(line, " <fltinp >fltout");
+	movecursor(term.t_nrow - 1, 0);
+	TTkclose();
+	shellprog(line);
+	TTkopen();
+	sgarbf = TRUE;
+	s = TRUE;
+#endif
+
+#if     V7 | USG | BSD
+	TTputc('\n');		/* Already have '\r'    */
+	TTflush();
+	TTclose();		/* stty to old modes    */
+	TTkclose();
+	strcat(line, " <fltinp >fltout");
+	system(line);
+	TTopen();
+	TTkopen();
+	TTflush();
+	sgarbf = TRUE;
+	s = TRUE;
+#endif
+
+	/* on failure, escape gracefully */
+	if (s != TRUE || (readin(filnam2, FALSE) == FALSE)) {
+		mlwrite("(Execution failed)");
+		strcpy(bp->b_fname, tmpnam);
+		unlink(filnam1);
+		unlink(filnam2);
+		return s;
+	}
+
+	/* reset file name */
+	strcpy(bp->b_fname, tmpnam);	/* restore name */
+	bp->b_flag |= BFCHG;	/* flag it as changed */
+
+	/* and get rid of the temporary file */
+	unlink(filnam1);
+	unlink(filnam2);
+	return TRUE;
+}

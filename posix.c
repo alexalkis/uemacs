@@ -10,6 +10,7 @@
  *	fixed for termios rather than the old termio.. Linus Torvalds
  */
 
+#ifndef AMIGA
 #ifdef POSIX
 
 #include <errno.h>
@@ -237,3 +238,4 @@ int typahead(void)
 }
 
 #endif				/* POSIX */
+#endif                          /* !AMIGA */

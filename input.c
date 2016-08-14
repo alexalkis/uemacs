@@ -20,7 +20,7 @@
 #endif
 #endif
 
-#if	PKCODE && (UNIX || (MSDOS && TURBO))
+#if	PKCODE && (AMIGA || UNIX || (MSDOS && TURBO))
 #define	COMPLC	1
 #else
 #define COMPLC	0
@@ -310,7 +310,7 @@ int get1key(void)
 	/* get a keystroke */
 	c = tgetc();
 
-#if	MSDOS
+#if	MSDOS 
 	if (c == 0) {		/* Apply SPEC prefix    */
 		c = tgetc();
 		if (c >= 0x00 && c <= 0x1F)	/* control key? */
@@ -319,6 +319,34 @@ int get1key(void)
 	}
 #endif
 
+#if     AMIGA
+        int upper;
+        
+        if (c==0) {
+          upper = tgetc();
+          /*
+          if (upper & (CONTROL>>8))
+            printf("Control\n");
+          else if (upper & (SPEC>>8))
+            printf("Function\n");
+          else if (upper & (META>>8))
+            printf("Meta\n");
+          else
+            printf("Shouldn't happen %X\n",upper);
+          */
+          c = tgetc();
+          c = (upper<<24)|c;
+        }
+        /*
+        else
+          printf("Normal char %X\n",c);
+        */
+        /* yank out the control prefix */
+       	if (c >= 0x00 && c <= 0x1F)	/* C0 control -> C-     */
+		c = CONTROL | (c + '@');
+        /* return the character */
+        return (c);
+#endif          
 	if (c >= 0x00 && c <= 0x1F)	/* C0 control -> C-     */
 		c = CONTROL | (c + '@');
 	return c;
@@ -327,6 +355,8 @@ int get1key(void)
 /*	GETCMD:	Get a command from the keyboard. Process all applicable
 		prefix keys
 							*/
+#undef VT220
+#define VT220 1
 int getcmd(void)
 {
 	int c;			/* fetched keystroke */
@@ -433,6 +463,8 @@ handle_CSI:
 	/* otherwise, just return it */
 	return c;
 }
+#undef VT220
+#define VT220 0
 
 /*	A more generalized prompt/reply function allowing the caller
 	to specify the proper terminator. If the terminator is not
@@ -444,10 +476,15 @@ int getstring(char *prompt, char *buf, int nbuf, int eolchar)
 	int c;
 	int quotef;	/* are we quoting the next char? */
 #if	COMPLC
+
 	int ffile, ocpos, nskip = 0, didtry = 0;
 #if     MSDOS
 	struct ffblk ffblk;
 	char *fcp;
+#endif
+#if AMIGA
+        char *fcp;
+        char *fname;
 #endif
 #if	UNIX
 	static char tmp[] = "/tmp/meXXXXXX";
@@ -491,7 +528,9 @@ int getstring(char *prompt, char *buf, int nbuf, int eolchar)
 			/* clear the message line */
 			mlwrite("");
 			TTflush();
-
+#if     AMIGA
+                        closeFileCompletionLock();
+#endif
 			/* if we default the buffer, return FALSE */
 			if (buf[0] == 0)
 				return FALSE;
@@ -506,6 +545,9 @@ int getstring(char *prompt, char *buf, int nbuf, int eolchar)
 			/* Abort the input? */
 			ctrlg(FALSE, 0);
 			TTflush();
+#if     AMIGA
+                        closeFileCompletionLock();
+#endif                        
 			return ABORT;
 		} else if ((c == 0x7F || c == 0x08) && quotef == FALSE) {
 			/* rubout/erase */
@@ -547,7 +589,7 @@ int getstring(char *prompt, char *buf, int nbuf, int eolchar)
 			   && ffile) {
 			/* TAB, complete file name */
 			char ffbuf[255];
-#if	MSDOS
+#if	MSDOS | AMIGA
 			char sffbuf[128];
 			int lsav = -1;
 #endif
@@ -595,6 +637,12 @@ int getstring(char *prompt, char *buf, int nbuf, int eolchar)
 				system(ffbuf);
 				tmpf = fopen(tmp, "r");
 #endif
+#if     AMIGA
+                                strcpy(sffbuf, buf);
+				// if (!iswild)  strcat(sffbuf, "#?");
+                                // printf("%s\n",sffbuf);
+#endif
+                                
 #if	MSDOS
 				strcpy(sffbuf, buf);
 				if (!iswild)
@@ -616,6 +664,16 @@ int getstring(char *prompt, char *buf, int nbuf, int eolchar)
 			} else if (nskip > 0)
 				c = findnext(&ffblk) ? 0 : ' ';
 #endif
+#if	AMIGA
+			if (nskip == 0) {
+                          strcpy(ffbuf, sffbuf);
+                          fname = getfirst(ffbuf);
+                          c = fname ? ' ' : '*';
+			} else if (nskip > 0) {
+                          fname = getnext(ffbuf);
+                          c = fname ? ' ' : 0;
+                        }
+#endif                        
 			nskip++;
 
 			if (c != ' ') {
@@ -633,6 +691,16 @@ int getstring(char *prompt, char *buf, int nbuf, int eolchar)
 					strncpy(buf, sffbuf, lsav + 1);
 					cpos = lsav + 1;
 					fcp = ffblk.ff_name;
+				}
+			while (c != 0 && (c = *fcp++) != 0 && c != '*')
+#endif
+#if	AMIGA
+				if (c == '*')
+					fcp = sffbuf;
+				else {
+					strncpy(buf, sffbuf, lsav + 1);
+					cpos = lsav + 1;
+					fcp = fname;
 				}
 			while (c != 0 && (c = *fcp++) != 0 && c != '*')
 #endif

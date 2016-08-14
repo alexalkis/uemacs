@@ -108,14 +108,14 @@
 
 #else
 
-#define	VT220	(UNIX | VMS)
+#define	VT220	0                // (UNIX | VMS)
 #define	VT100	0
 
-#define	ANSI	0
-#define	VMSVT	VMS
+#define	ANSI	1
+#define	VMSVT	0               //VMS
 #define	VT52	0
-#define	TERMCAP	UNIX
-#define	IBMPC	MSDOS
+#define	TERMCAP	0                //UNIX
+#define	IBMPC	0               //MSDOS
 
 #endif /* Autoconf. */
 
@@ -237,10 +237,17 @@
 #define	NCOLORS	8		/* number of supported colors   */
 #define	KBLOCK	250		/* sizeof kill buffer chunks    */
 
+#if AMIGA1
+#define CONTROL 0x100	/* Control flag, or'ed in       */
+#define META    0x200	/* Meta flag, or'ed in          */
+#define CTLX    0x400	/* ^X flag, or'ed in            */
+#define	SPEC	0x800	/* special key (function keys)  */
+#else
 #define CONTROL 0x10000000	/* Control flag, or'ed in       */
 #define META    0x20000000	/* Meta flag, or'ed in          */
 #define CTLX    0x40000000	/* ^X flag, or'ed in            */
 #define	SPEC	0x80000000	/* special key (function keys)  */
+#endif
 
 #ifdef	FALSE
 #undef	FALSE

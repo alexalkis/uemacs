@@ -345,6 +345,10 @@ void makename(char *bname, char *fname)
 	       && cp1[-1] != '/')
 		--cp1;
 #endif
+#if     AMIGA
+	while (cp1 != &fname[0] && cp1[-1] != ':' && cp1[-1] != '/')
+		--cp1;
+#endif
 #if     V7 | USG | BSD
 	while (cp1 != &fname[0] && cp1[-1] != '/')
 		--cp1;

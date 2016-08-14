@@ -7,7 +7,8 @@ int xmkstemp(char *template)
 {
 	int fd;
 
-	fd = mkstemp(template);
+	//fd = mkstemp(template);
+        fd=-1;
 	if (fd < 0)
 		die("Unable to create temporary file");
 	return fd;

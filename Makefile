@@ -20,13 +20,13 @@ SRC=ansi.c basic.c bind.c buffer.c crypt.c display.c eval.c exec.c \
 	file.c fileio.c ibmpc.c input.c isearch.c line.c lock.c main.c \
 	pklock.c posix.c random.c region.c search.c spawn.c tcap.c \
 	termio.c vmsvt.c vt52.c window.c word.c names.c globals.c version.c \
-	usage.c wrapper.c utf8.c
+	usage.c wrapper.c utf8.c amigados.c
 
 OBJ=ansi.o basic.o bind.o buffer.o crypt.o display.o eval.o exec.o \
 	file.o fileio.o ibmpc.o input.o isearch.o line.o lock.o main.o \
 	pklock.o posix.o random.o region.o search.o spawn.o tcap.o \
 	termio.o vmsvt.o vt52.o window.o word.o names.o globals.o version.o \
-	usage.o wrapper.o utf8.o
+	usage.o wrapper.o utf8.o amigados.o
 
 HDR=ebind.h edef.h efunc.h epath.h estruct.h evar.h util.h version.h
 
@@ -34,23 +34,27 @@ HDR=ebind.h edef.h efunc.h epath.h estruct.h evar.h util.h version.h
 
 CC=gcc
 WARNINGS=-Wall -Wstrict-prototypes
-CFLAGS=-O2 $(WARNINGS) -g
+CFLAGS=-O2 $(WARNINGS)
 #CC=c89 +O3			# HP
 #CFLAGS= -D_HPUX_SOURCE -DSYSV
 #CFLAGS=-O4 -DSVR4		# Sun
 #CFLAGS=-O -qchars=signed	# RS/6000
-ifeq ($(uname_S),Linux)
- DEFINES=-DAUTOCONF -DPOSIX -DUSG -D_BSD_SOURCE -D_SVID_SOURCE -D_XOPEN_SOURCE=600
-endif
-ifeq ($(uname_S),FreeBSD)
- DEFINES=-DAUTOCONF -DPOSIX -DSYSV -D_FREEBSD_C_SOURCE -D_BSD_SOURCE -D_SVID_SOURCE -D_XOPEN_SOURCE=600
-endif
-ifeq ($(uname_S),Darwin)
- DEFINES=-DAUTOCONF -DPOSIX -DSYSV -D_DARWIN_C_SOURCE -D_BSD_SOURCE -D_SVID_SOURCE -D_XOPEN_SOURCE=600
-endif
+
+DEFINES=-DAMIGA=1 -DAUTOCONF -DPOSIX -D_BSD_SOURCE -D_SVID_SOURCE -D_XOPEN_SOURCE=600
+
+#ifeq ($(uname_S),Linux)
+# DEFINES=-DAUTOCONF -DPOSIX -DUSG -D_BSD_SOURCE -D_SVID_SOURCE -D_XOPEN_SOURCE=600
+#endif
+#ifeq ($(uname_S),FreeBSD)
+# DEFINES=-DAUTOCONF -DPOSIX -DSYSV -D_FREEBSD_C_SOURCE -D_BSD_SOURCE -D_SVID_SOURCE -D_XOPEN_SOURCE=600
+#endif
+#ifeq ($(uname_S),Darwin)
+# DEFINES=-DAUTOCONF -DPOSIX -DSYSV -D_DARWIN_C_SOURCE -D_BSD_SOURCE -D_SVID_SOURCE -D_XOPEN_SOURCE=600
+#endif
 #DEFINES=-DAUTOCONF
 #LIBS=-ltermcap			# BSD
-LIBS=-lcurses			# SYSV
+#LIBS=-lcurses			# SYSV
+LIBS=-noixemul -s
 #LIBS=-ltermlib
 #LIBS=-L/usr/lib/termcap -ltermcap
 LFLAGS=-hbx

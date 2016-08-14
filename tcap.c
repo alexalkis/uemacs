@@ -5,6 +5,7 @@
  *	modified by Petri Kutvonen
  */
 
+#ifndef AMIGA
 /*
  * Defining this to 1 breaks tcapopen() - it doesn't check if the
  * sceen size has changed.
@@ -354,3 +355,4 @@ static void putpad(char *str)
 	tputs(str, 1, ttputc);
 }
 #endif /* TERMCAP */
+#endif /* !AMIGA */
