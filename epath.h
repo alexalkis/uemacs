@@ -27,7 +27,7 @@ static char *pathname[] =
 	".emacsrc", "emacs.hlp",
         ""
 };
-#endif
+#else
 
 #if	V7 | BSD | USG
 {
@@ -46,5 +46,7 @@ static char *pathname[] =
 #endif
 "sys$sysdevice:[vmstools]"};
 #endif
+
+#endif /* if AMIGA */
 
 #endif  /* EPATH_H_ */
