@@ -66,7 +66,9 @@ static void modeline(struct window *wp);
 static void mlputi(int i, int r);
 static void mlputli(long l, int r);
 static void mlputf(int s);
+#ifdef SIGWINCH
 static int newscreensize(int h, int w);
+#endif
 
 #if RAINBOW
 static void putline(int row, int col, char *buf);

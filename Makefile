@@ -96,6 +96,9 @@ tags:	${SRC}
 	@rm -f tags
 	ctags ${SRC}
 
+TAGS:
+	find . -type f -iname "*.[ch]" | etags -
+
 source:
 	@mv makefile makefile.bak
 	@echo "# makefile for emacs, updated `date`" >makefile

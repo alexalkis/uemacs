@@ -26,6 +26,13 @@
 #define COMPLC	0
 #endif
 
+#if AMIGA
+void closeFileCompletionLock(void);
+char *getnext(char *fspec);
+char *getfirst(char *fspec);
+#endif
+
+
 /*
  * Ask a yes or no question in the message line. Return either TRUE, FALSE, or
  * ABORT. The ABORT status is returned if the user bumps out of the question
