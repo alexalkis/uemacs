@@ -913,6 +913,7 @@ char *mklower(char *str)
 	return str;
 }
 
+#if __GNUC__ <= 3
 /*
  * take the absolute value of an integer
  */
@@ -920,6 +921,7 @@ int abs(int x)
 {
 	return x < 0 ? -x : x;
 }
+#endif
 
 /*
  * returns a random integer

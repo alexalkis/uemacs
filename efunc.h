@@ -343,7 +343,9 @@ extern int stol(char *val);
 extern char *ltos(int val);
 extern char *mkupper(char *str);
 extern char *mklower(char *str);
+#if __GNUC__ <= 3
 extern int abs(int x);
+#endif
 extern int ernd(void);
 extern int sindex(char *source, char *pattern);
 extern char *xlat(char *source, char *lookup, char *trans);
