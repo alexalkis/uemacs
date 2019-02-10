@@ -289,7 +289,7 @@ void ttopen(void)
 //  new_win.Flags = WINDOWCLOSE | SMART_REFRESH | ACTIVATE |
 //      WINDOWDRAG | WINDOWDEPTH | WINDOWSIZING | SIZEBRIGHT |
 //      RMBTRAP | NOCAREREFRESH;
-  new_win.Flags = WFLG_CLOSEGADGET | WFLG_DRAGBAR | WFLG_DEPTHGADGET | WFLG_SIZEGADGET | WFLG_ACTIVATE;
+  new_win.Flags = WFLG_CLOSEGADGET | WFLG_DRAGBAR | WFLG_DEPTHGADGET | WFLG_SIZEGADGET | WFLG_SIZEBRIGHT | WFLG_ACTIVATE |WFLG_RMBTRAP;
   new_win.IDCMPFlags = IDCMP_CLOSEWINDOW | IDCMP_NEWSIZE | IDCMP_MOUSEBUTTONS | IDCMP_RAWKEY;
   //new_win.IDCMPFlags = CLOSEWINDOW | NEWSIZE | MOUSEBUTTONS | RAWKEY;
   new_win.Type = WBENCHSCREEN;
@@ -535,7 +535,7 @@ void doevent(void)
       x = (eventX - win->BorderLeft) / CRWIDTH;
       y = (eventY - win->BorderTop) / CRHEIGHT;
     }
-    //printf("x:%d y:%d\n",x,y);
+    //printf("code: %d x:%d y:%d\n", code, x, y);
     if (x > 77)
       x = 77;
     if (y > AMIGAMAXLINES)
@@ -548,7 +548,8 @@ void doevent(void)
     }
     */
 
-    /* and lastly, a mouse button press 
+#ifdef MOUSEWORKS
+    // and lastly, a mouse button press
     switch (code) {
       case 104:	stuffibuf(MOUS | mod('a'), x, y);
         break;
@@ -559,9 +560,9 @@ void doevent(void)
       case 233:	stuffibuf(MOUS | mod('f'), x, y);
         break;
     }
-    */
+#endif
+
   }
-  return;
 }
 
 int mod(int c)	/* modify a character by the current shift and control flags */
@@ -675,12 +676,13 @@ void stuffibuf(int key, int x, int y)	/* stuff a key in the input buffer */
   /* queue up an extended escape sequence */
   in_put(0);		/* escape indicator */
   in_put(upper);		/* event type */
-  if (upper & (MOUS >> 24)) {
+  //if (upper & (MOUS >> 24)) {
+  if (upper & MOUS) {
     in_put(x);	/* x position */
     in_put(y);	/* y position */
+    return;
   }
   in_put(key);		/* event code */
-  return;
 }
 
 /*
