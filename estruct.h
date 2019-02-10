@@ -8,6 +8,10 @@
  *	modified by Petri Kutvonen
  */
 
+#ifdef __AMIGA__
+#define AMIGA 1
+#endif
+
 #define MAXCOL	500
 #define MAXROW	500
 
@@ -63,9 +67,9 @@
 
 #else
 
-#define MSDOS   1		/* MS-DOS                       */
+#define MSDOS   0		/* MS-DOS                       */
 #define V7      0		/* V7 UNIX or Coherent or BSD4.2 */
-#define	BSD	0		/* UNIX BSD 4.2 and ULTRIX      */
+#define	BSD	1		/* UNIX BSD 4.2 and ULTRIX      */
 #define	USG	0		/* UNIX system V                */
 #define VMS     0		/* VAX/VMS                      */
 
@@ -74,9 +78,9 @@
 #ifndef	AUTOCONF
 
 /*	Compiler definitions			*/
-#define	UNIX	0		/* a random UNIX compiler */
+#define	UNIX	1		/* a random UNIX compiler */
 #define	MSC	0		/* MicroSoft C compiler, versions 3 up */
-#define	TURBO	1		/* Turbo C/MSDOS */
+#define	TURBO	0		/* Turbo C/MSDOS */
 
 #else
 

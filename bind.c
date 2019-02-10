@@ -476,9 +476,9 @@ int startup(char *sfname)
  */
 char *flook(char *fname, int hflag)
 {
-  //char *home;	/* path to home directory */
-	//char *path;	/* environmental PATH variable */
-	//char *sp;	/* pointer into path spec */
+  char *home;	/* path to home directory */
+	char *path;	/* environmental PATH variable */
+	char *sp;	/* pointer into path spec */
 	int i;		/* index */
 	static char fspec[NSTRING];	/* full path spec to search */
 

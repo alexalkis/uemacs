@@ -279,16 +279,19 @@ void ttopen(void)
 
 #ifdef USECUSTOMSCREEN
   new_win.Title = NULL;
-  new_win.Flags = SMART_REFRESH | ACTIVATE | RMBTRAP | NOCAREREFRESH | BACKDROP | BORDERLESS;
-  new_win.IDCMPFlags =  MOUSEBUTTONS |RAWKEY;
+  new_win.Flags = WFLG_SMART_REFRESH | WFLG_ACTIVATE | WFLG_RMBTRAP | WFLG_NOCAREREFRESH | WFLG_BACKDROP | WFLG_BORDERLESS;
+  //new_win.Flags = SMART_REFRESH | ACTIVATE | RMBTRAP | NOCAREREFRESH | BACKDROP | BORDERLESS;
+  new_win.IDCMPFlags =  IDCMP_MOUSEBUTTONS | IDCMP_RAWKEY;
   new_win.Type = CUSTOMSCREEN;
 #else
   new_win.Title = (unsigned char *)"uEmacs 4.0.15";
-  new_win.Flags = WINDOWCLOSE | SMART_REFRESH | ACTIVATE |
-      WINDOWDRAG | WINDOWDEPTH | WINDOWSIZING | SIZEBRIGHT |
-      RMBTRAP | NOCAREREFRESH;
-  new_win.IDCMPFlags = CLOSEWINDOW | NEWSIZE | MOUSEBUTTONS |
-      RAWKEY;
+#include <intuition/iobsolete.h>
+//  new_win.Flags = WINDOWCLOSE | SMART_REFRESH | ACTIVATE |
+//      WINDOWDRAG | WINDOWDEPTH | WINDOWSIZING | SIZEBRIGHT |
+//      RMBTRAP | NOCAREREFRESH;
+  new_win.Flags = WFLG_CLOSEGADGET | WFLG_DRAGBAR | WFLG_DEPTHGADGET | WFLG_SIZEGADGET | WFLG_ACTIVATE;
+  new_win.IDCMPFlags = IDCMP_CLOSEWINDOW | IDCMP_NEWSIZE | IDCMP_MOUSEBUTTONS | IDCMP_RAWKEY;
+  //new_win.IDCMPFlags = CLOSEWINDOW | NEWSIZE | MOUSEBUTTONS | RAWKEY;
   new_win.Type = WBENCHSCREEN;
 #endif
   new_win.FirstGadget = NULL;
@@ -506,7 +509,7 @@ void doevent(void)
     ReplyMsg((struct Message *)event);
 
     /* a normal keystroke? */
-    if (class == RAWKEY) {
+    if (class == IDCMP_RAWKEY) {
       //static int alkc=0;
       //printf("key #%d\n",++alkc);
       dokey(code);
@@ -514,13 +517,13 @@ void doevent(void)
     }
 
     /* User clicked on the close gadget! */
-    if (class == CLOSEWINDOW) {
+    if (class == IDCMP_CLOSEWINDOW) {
       quit(FALSE, 0);
       stuffibuf(255, 0, 0);	/* fake a char to force quit to work */
     }
 
     /* resolve the mouse address (border adjusted) */
-    if (class == NEWSIZE) {
+    if (class == IDCMP_NEWSIZE) {
       x = (win->Width - (win->BorderLeft+win->BorderRight)) / CRWIDTH;
       y = (win->Height - (win->BorderTop+win->BorderBottom)) / CRHEIGHT;
       newwidth(TRUE, x);
