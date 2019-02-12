@@ -460,8 +460,8 @@ int insert_newline(int f, int n)
 	if (n < 0)
 		return FALSE;
 
-	/* if we are in C mode and this is a default <NL> */
-	if (n == 1 && (curbp->b_mode & MDCMOD) &&
+	/* if we are in C (or ASM) mode and this is a default <NL> */
+	if (n == 1 && (curbp->b_mode & (MDCMOD|MDASM)) &&
 	    curwp->w_dotp != curbp->b_linep)
 		return cinsert();
 

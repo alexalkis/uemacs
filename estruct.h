@@ -483,7 +483,7 @@ struct buffer {
 #define	BFTRUNC	0x04		/* buffer was truncated when read */
 
 /*	mode flags	*/
-#define	NUMMODES	11	/* # of defined modes           */
+#define	NUMMODES	10	/* # of defined modes           */
 
 #define	MDWRAP	0x0001		/* word wrap                    */
 #define	MDCMOD	0x0002		/* C indentation and fence match */

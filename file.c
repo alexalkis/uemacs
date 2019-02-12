@@ -299,6 +299,9 @@ int readin(char *fname, int lockfl)
 	strcat(mesg, ")");
 	mlwrite(mesg);
 
+	///TODO: add file extension detection here?
+	curbp->b_mode = MDASM;
+
       out:
 	for (wp = wheadp; wp != NULL; wp = wp->w_wndp) {
 		if (wp->w_bufp == curbp) {
