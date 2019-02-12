@@ -483,7 +483,7 @@ struct buffer {
 #define	BFTRUNC	0x04		/* buffer was truncated when read */
 
 /*	mode flags	*/
-#define	NUMMODES	10	/* # of defined modes           */
+#define	NUMMODES	11	/* # of defined modes           */
 
 #define	MDWRAP	0x0001		/* word wrap                    */
 #define	MDCMOD	0x0002		/* C indentation and fence match */
@@ -494,6 +494,7 @@ struct buffer {
 #define MDMAGIC	0x0040		/* regular expresions in search */
 #define	MDCRYPT	0x0080		/* encrytion mode active        */
 #define	MDASAVE	0x0100		/* auto-save mode               */
+#define MDASM	0x0200		/* asm mode */
 
 /*
  * The starting position of a region, and the size of the region in

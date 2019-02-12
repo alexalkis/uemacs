@@ -13,13 +13,13 @@ int revexist = FALSE;		/* does reverse video exist?    */
 int flickcode = FALSE;		/* do flicker supression?       */
 char *modename[] = {		/* name of modes                */
 	"WRAP", "CMODE", "SPELL", "EXACT", "VIEW", "OVER",
-	"MAGIC", "CRYPT", "ASAVE", "UTF-8"
+	"MAGIC", "CRYPT", "ASAVE", "UTF-8", "ASM"
 };
 char *mode2name[] = {		/* name of modes                */
 	"Wrap", "Cmode", "Spell", "Exact", "View", "Over",
-	"Magic", "Crypt", "Asave", "utf-8"
+	"Magic", "Crypt", "Asave", "utf-8", "Asm"
 };
-char modecode[] = "WCSEVOMYAU";	/* letters to represent modes   */
+char modecode[] = "WCSEVOMYaUA";	/* letters to represent modes   */
 int gmode = 0;			/* global editor mode           */
 int gflags = GFREAD;		/* global control flag          */
 #if	PKCODE & IBMPC
