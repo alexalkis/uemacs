@@ -4,7 +4,7 @@ project(uemacs C)
 
 add_compile_options(-D__ALKIS__)
 if (CMAKE_C_COMPILER STREQUAL "/opt/amiga/gcc6/bin/m68k-amigaos-gcc")
-    add_compile_options(-mcrt=nix13 -DAMIGA=1 -fbaserel -fomit-frame-pointer -Wall -DAUTOCONF -DPOSIX -D_BSD_SOURCE -D_SVID_SOURCE -D_XOPEN_SOURCE=600 )
+    add_compile_options(-mcrt=nix13 -DAMIGA=1 -DUSEINLINE -fbaserel -fomit-frame-pointer -Wall -DAUTOCONF -DPOSIX -D_BSD_SOURCE -D_SVID_SOURCE -D_XOPEN_SOURCE=600 )
     set(CMAKE_EXE_LINKER_FLAGS "-s -mcrt=nix13 -fbaserel" CACHE INTERNAL "" FORCE)
     #add_compile_options(-fbaserel -fomit-frame-pointer -Wall)
     #set(CMAKE_EXE_LINKER_FLAGS "-s -fbaserel -noixemul " CACHE INTERNAL "" FORCE)

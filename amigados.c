@@ -12,16 +12,21 @@
 #include <exec/io.h>
 #include <intuition/intuition.h>
 #include <devices/console.h>
+#if !defined(__clang__)
 #include <proto/exec.h>
 #include <proto/dos.h>
 #include <proto/graphics.h>
 #include <proto/intuition.h>
+#else
+#include <clib/exec_protos.h>
+#include <clib/dos_protos.h>
+#include <clib/graphics_protos.h>
+#include <clib/intuition_protos.h>
+#endif
 //#include "etype.h"
 #include "edef.h"
 #include "efunc.h"
 //#include "elang.h"
-
-void ttflush(void);
 
 #define CTRL	CONTROL		/* Control flag, or'ed in		*/
 #define MOUS	0x1000		/* alternative input device (mouse)	*/
@@ -31,8 +36,7 @@ void ttflush(void);
 
 #define INTUITION_REV	0L
 #define NEW 			1006L
-#define CRWIDTH		8
-#define CRHEIGHT		8
+
 
 struct IntuitionBase *IntuitionBase;
 struct Window *win;
@@ -368,9 +372,11 @@ void ttopen(void)
   in_init();
 
   /* set the current sizes */
-  newwidth(TRUE, (win->Width-(win->BorderLeft+win->BorderRight))/8);
+
+  newwidth(TRUE, (win->Width-(win->BorderLeft+win->BorderRight))/win->IFont->tf_XSize);
+  //printf("W: %d LeftB: %d RightB: %d [%d]\n", win->Width, win->BorderLeft, win->BorderRight, (win->Width-(win->BorderLeft+win->BorderRight))/8);
 #define AMIGAMAXLINES 28
-  newsize(TRUE, (win->Height-(win->BorderTop+win->BorderBottom))/8); // alkis - was 23
+  newsize(TRUE, (win->Height-(win->BorderTop+win->BorderBottom))/win->IFont->tf_YSize); // alkis - was 23
   //printf("alkis -> %d\n",(win->Height-(win->BorderTop+win->BorderBottom))/8);
   //newsize(TRUE, 26); // alkis - was 23
 
@@ -524,22 +530,25 @@ void doevent(void)
 
     /* resolve the mouse address (border adjusted) */
     if (class == IDCMP_NEWSIZE) {
-      x = (win->Width - (win->BorderLeft+win->BorderRight)) / CRWIDTH;
-      y = (win->Height - (win->BorderTop+win->BorderBottom)) / CRHEIGHT;
+      x = (win->Width - (win->BorderLeft+win->BorderRight)) / win->IFont->tf_XSize;
+      y = (win->Height - (win->BorderTop+win->BorderBottom)) / win->IFont->tf_YSize;
       newwidth(TRUE, x);
       newsize(TRUE, y);
       sgarbf = TRUE;
       stuffibuf(CTRL|'F', 0, 0);
       //redraw(TRUE,0);
     } else {
-      x = (eventX - win->BorderLeft) / CRWIDTH;
-      y = (eventY - win->BorderTop) / CRHEIGHT;
+      x = (eventX - win->BorderLeft) / win->IFont->tf_XSize;
+      y = (eventY - win->BorderTop) / win->IFont->tf_YSize;
     }
     //printf("code: %d x:%d y:%d\n", code, x, y);
+
+    /*
     if (x > 77)
       x = 77;
     if (y > AMIGAMAXLINES)
       y = AMIGAMAXLINES;
+    */
 
     /* are we resizing the window?
     if (class == NEWSIZE) {
@@ -957,7 +966,7 @@ char *getnfile()
 #else
 
 #include <dos/dos.h>
-#include <proto/dos.h>
+
 
 __aligned struct FileInfoBlock fib;
 static BPTR fc_lock = 0;   /* File completion lock */
@@ -969,7 +978,7 @@ static char fullfname[108];
  *              foo/boo -> returns foo/
  *              df0:foo/boo -> returns df0:foo/
  */
-char *getDirectory(char *text)
+char *getDirectory(const char *text)
 {
         static char buffer[80];
         int lastplace = -1;
@@ -996,7 +1005,7 @@ char *getfirst(char *fspec)
   if (fc_lock)
     UnLock(fc_lock);
 
-  fc_lock = Lock(base, ACCESS_READ);
+  fc_lock = Lock((STRPTR)base, ACCESS_READ);
   if (fc_lock) {
     if (Examine(fc_lock, &fib)) {
       if (!strncasecmp(starts,fib.fib_FileName,strlen(starts))) {
@@ -1016,8 +1025,6 @@ char *getfirst(char *fspec)
     printf("Can't obtain lock on \"%s\"\n", fspec);
     return NULL;
   }
-  //printf("getffile called with \"%s\"\n", fspec);
-  return(NULL);
 }
 
 char *getnext(char *fspec)
@@ -1030,7 +1037,7 @@ char *getnext(char *fspec)
   if (fc_lock == 0)
     return NULL;
   do {
-    ret = ExNext(fc_lock, &fib);
+    ret = (BOOL) ExNext(fc_lock, &fib);
   } while (ret != FALSE && strncasecmp(starts, fib.fib_FileName, strlen(starts)));
   if (ret == FALSE) {
     error = IoErr();
