@@ -1,6 +1,12 @@
 cmake_minimum_required(VERSION 3.13)
 project(uemacs C)
 
+FIND_PROGRAM(CRANKER cranker_generic PATHS "/usr/local/bin")
+IF(CRANKER)
+    SET(CRANKER_COMMAND ${CRANKER} -f ${CMAKE_CURRENT_BINARY_DIR}/uemacs -o ${CMAKE_CURRENT_BINARY_DIR}/em)
+ENDIF(CRANKER)
+
+message(${CRANKER} ${CMAKE_TA})
 
 add_compile_options(-D__ALKIS__)
 if (CMAKE_C_COMPILER STREQUAL "/opt/amiga/gcc6/bin/m68k-amigaos-gcc")
@@ -66,5 +72,7 @@ add_executable(uemacs
 
 add_custom_command(TARGET uemacs
         POST_BUILD
-        COMMAND ls -l uemacs
+        COMMAND ${CRANKER_COMMAND}
+        #COMMAND cranker_generic -f uemacs -o em
+        COMMAND ls -l uemacs em
         )
