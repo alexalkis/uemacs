@@ -74,5 +74,5 @@ add_custom_command(TARGET uemacs
         POST_BUILD
         COMMAND ${CRANKER_COMMAND}
         #COMMAND cranker_generic -f uemacs -o em
-        COMMAND ls -l uemacs em
+        COMMAND ls -l uemacs
         )
