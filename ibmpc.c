@@ -7,6 +7,7 @@
  *
  *	modified by Petri Kutvonen
  */
+#define AMIGA
 #ifndef AMIGA
 #define	termdef	1		/* don't define "term" external */
 

@@ -14,6 +14,9 @@ if (CMAKE_C_COMPILER STREQUAL "/opt/amiga/gcc6/bin/m68k-amigaos-gcc")
     set(CMAKE_EXE_LINKER_FLAGS "-s -mcrt=nix13 -fbaserel" CACHE INTERNAL "" FORCE)
     #add_compile_options(-fbaserel -fomit-frame-pointer -Wall)
     #set(CMAKE_EXE_LINKER_FLAGS "-s -fbaserel -noixemul " CACHE INTERNAL "" FORCE)
+    else()
+    add_compile_options(-DLINUX -DAUTOCONF -DPOSIX -DUSG -D_BSD_SOURCE -D_SVID_SOURCE -D_XOPEN_SOURCE=600)
+    #set(CMAKE_VERBOSE_MAKEFILE ON)
 endif(CMAKE_C_COMPILER STREQUAL "/opt/amiga/gcc6/bin/m68k-amigaos-gcc")
 
 
@@ -69,6 +72,13 @@ add_executable(uemacs
         word.c
         wrapper.c
         wrapper.h)
+
+
+if (CMAKE_C_COMPILER STREQUAL "/opt/amiga/gcc6/bin/m68k-amigaos-gcc")
+
+else()
+    target_link_libraries(uemacs "ncurses")
+endif(CMAKE_C_COMPILER STREQUAL "/opt/amiga/gcc6/bin/m68k-amigaos-gcc")
 
 add_custom_command(TARGET uemacs
         POST_BUILD

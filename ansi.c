@@ -205,7 +205,8 @@ void ansiparm(int n)
 
 void ansiopen(void)
 {
-#if     V7 | USG | BSD
+#if LINUX
+#elif  V7 | USG | BSD
 	char *cp;
 
 	if ((cp = getenv("TERM")) == NULL) {

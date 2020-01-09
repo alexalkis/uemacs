@@ -7,7 +7,6 @@
  *
  *	modified by Petri Kutvonen
  */
-
 #ifndef POSIX
 
 #include        <stdio.h>
@@ -57,11 +56,12 @@ struct termio ntermio;		/* charactoristics to use inside */
 #endif
 
 #if	V7 | BSD
-#include        <sgtty.h>	/* for stty/gtty functions */
-#include	<signal.h>
+#include <sgtty.h>	        /* for stty/gtty functions */
+#include <signal.h>
 struct sgttyb ostate;		/* saved tty state */
 struct sgttyb nstate;		/* values for editor mode */
 struct tchars otchars;		/* Saved terminal special character set */
+
 #if	XONXOFF
 struct tchars ntchars = { 0xff, 0xff, 0x11, 0x13, 0xff, 0xff };
 
