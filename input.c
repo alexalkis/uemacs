@@ -364,8 +364,10 @@ int get1key(void)
 /*	GETCMD:	Get a command from the keyboard. Process all applicable
 		prefix keys
 							*/
+#if AMIGA || LINUX
 #undef VT220
 #define VT220 1
+#endif
 int getcmd(void)
 {
 	int c;			/* fetched keystroke */
@@ -472,8 +474,10 @@ handle_CSI:
 	/* otherwise, just return it */
 	return c;
 }
+#if AMIGA || LINUX
 #undef VT220
 #define VT220 0
+#endif
 
 /*	A more generalized prompt/reply function allowing the caller
 	to specify the proper terminator. If the terminator is not
