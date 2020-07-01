@@ -375,6 +375,11 @@ struct key_tab keytab[NBINDS] = {
 #endif
 #endif
 
+#ifdef LINUX
+#undef VT220
+#define VT220 1
+#endif
+
 #if	VT220
 	{SPEC | '1', fisearch}
 	,			/* VT220 keys   */

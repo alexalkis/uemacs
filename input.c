@@ -286,7 +286,7 @@ int tgetc(void)
 
 	/* fetch a character from the terminal driver */
 	c = TTgetc();
-#if LINUX
+#if LINUX_NOPE
 	fprintf(stderr, "key: %d\n", c);
 #endif
 	/* record it for $lastkey */
