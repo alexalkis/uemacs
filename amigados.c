@@ -307,7 +307,6 @@ void ttopen(void)
   new_win.MaxWidth = 640;
   new_win.MaxHeight = 256;
 
-
 #ifdef USECUSTOMSCREEN
   int coltran[16] = {2, 3, 5, 7, 0, 4, 6, 1,8, 12, 10, 14, 9, 13, 11, 15};
   //extern int coltran[];
@@ -642,20 +641,22 @@ void dokey(int code)
     ekey = keytrans[code].rw_code;
 
   /* now apply the ALTD modifier */
-  if (r_altflag || l_altflag)
-    ekey |= ALTD;
+  //if (r_altflag || l_altflag)
+    if (r_amiflag || l_amiflag)
+        ekey |= ALTD;
 
   /* apply the META prefix */
-  if (r_amiflag || l_amiflag || (ekey & META)) {
+    if (r_altflag || l_altflag || (ekey & META)) {
     stuffibuf(CTRL|'[',0,0);
     if (ekey & META) ekey&=~META;
     if ('a' <= ekey && ekey <= 'z') {
       ekey -= 32;
-      printf("%c\n",ekey);
+      //printf("%c\n",ekey);
     //ekey |= META;
-    } else {
-      printf("not in range %c (%X)\n",ekey,ekey);
     }
+//    else {
+//      printf("not in range %c (%X)\n",ekey,ekey);
+//    }
   }
 
   /* and place it in the input buffer */
@@ -1064,7 +1065,7 @@ void closeFileCompletionLock(void) {
 
 #endif
 #else
-adoshello()
+void adoshello()
 {
 }
 #endif

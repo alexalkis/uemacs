@@ -7,6 +7,10 @@
 #include "edef.h"
 #include "efunc.h"
 
+#ifdef POSIX
+char *cuserid(char *string);
+#endif
+
 #if (FILOCK && BSD) || SVR4
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -23,7 +27,8 @@
 #define MAXLOCK 512
 #define MAXNAME 128
 
-#if defined(SVR4) && ! defined(__linux__)
+#if defined(SVR4) && ! defined(LINUX)
+
 #include <sys/systeminfo.h>
 
 int gethostname(char *name, int namelen)
