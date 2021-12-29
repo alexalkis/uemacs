@@ -84,6 +84,7 @@ void ttopen(void)
 	kbdflgs = fcntl(0, F_GETFL, 0);
 	kbdpoll = FALSE;
 
+
 	/* on all screens we are not sure of the initial position
 	   of the cursor                                        */
 	ttrow = 999;

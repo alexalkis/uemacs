@@ -203,6 +203,9 @@ void ansiparm(int n)
 	ttputc((n % 10) + '0');
 }
 
+
+#include <sys/ioctl.h>
+#include <unistd.h>
 void ansiopen(void)
 {
 #if LINUX
@@ -220,6 +223,10 @@ void ansiopen(void)
 #endif
 	strcpy(sres, "NORMAL");
 	revexist = TRUE;
+  struct winsize w;
+  ioctl(STDOUT_FILENO, TIOCGWINSZ, &w);
+  term.t_ncol = term.t_mcol = w.ws_col;
+  term.t_nrow = term.t_mrow = w.ws_row-1;
 	ttopen();
 }
 

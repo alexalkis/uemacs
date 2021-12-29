@@ -7,8 +7,11 @@ int xmkstemp(char *template)
 {
 	int fd;
 
-	//fd = mkstemp(template);
-        fd=-1;
+#ifdef AMIGA
+  fd=-1;
+#else
+	fd = mkstemp(template);
+#endif
 	if (fd < 0)
 		die("Unable to create temporary file");
 	return fd;
