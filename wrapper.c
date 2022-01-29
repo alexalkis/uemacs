@@ -1,26 +1,23 @@
 #include "usage.h"
-
 #include <stdlib.h>
 
 /* Function copyright: git */
-int xmkstemp(char *template)
-{
-	int fd;
+int xmkstemp(char *template) {
+  int fd;
 
 #ifdef AMIGA
-  fd=-1;
+  fd = mkstemp(template);
 #else
-	fd = mkstemp(template);
+  fd = mkstemp(template);
 #endif
-	if (fd < 0)
-		die("Unable to create temporary file");
-	return fd;
+  if (fd < 0)
+    die("Unable to create temporary file");
+  return fd;
 }
 
-void *xmalloc(size_t size)
-{
-	void *ret = malloc(size);
-	if (!ret)
-		die("Out of memory");
-	return ret;
+void *xmalloc(size_t size) {
+  void *ret = malloc(size);
+  if (!ret)
+    die("Out of memory");
+  return ret;
 }

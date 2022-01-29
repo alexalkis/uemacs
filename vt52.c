@@ -11,11 +11,11 @@
  *	modified by Petri Kutvonen
  */
 
-#define	termdef	1		/* don't define "term" external */
+#define    termdef    1        /* don't define "term" external */
 
 #include        <stdio.h>
 #include        "estruct.h"
-#include	"edef.h"
+#include    "edef.h"
 
 #if     VT52
 
@@ -53,53 +53,53 @@ extern int vt52bcol();
  * All the hard fields just point into the terminal I/O code.
  */
 struct terminal term = {
-	NROW - 1,
-	NROW - 1,
-	NCOL,
-	NCOL,
-	MARGIN,
-	SCRSIZ,
-	NPAUSE,
-	&vt52open,
-	&ttclose,
-	&vt52kopen,
-	&vt52kclose,
-	&ttgetc,
-	&ttputc,
-	&ttflush,
-	&vt52move,
-	&vt52eeol,
-	&vt52eeop,
-	&vt52beep,
-	&vt52rev,
-	&vt52cres
+    NROW - 1,
+    NROW - 1,
+    NCOL,
+    NCOL,
+    MARGIN,
+    SCRSIZ,
+    NPAUSE,
+    &vt52open,
+    &ttclose,
+    &vt52kopen,
+    &vt52kclose,
+    &ttgetc,
+    &ttputc,
+    &ttflush,
+    &vt52move,
+    &vt52eeol,
+    &vt52eeop,
+    &vt52beep,
+    &vt52rev,
+    &vt52cres
 #if	COLOR
-	    , &vt52fcol,
-	&vt52bcol
+        , &vt52fcol,
+    &vt52bcol
 #endif
 #if	SCROLLCODE
-	    , NULL
+        , NULL
 #endif
 };
 
 vt52move(row, col)
 {
-	ttputc(ESC);
-	ttputc('Y');
-	ttputc(row + BIAS);
-	ttputc(col + BIAS);
+    ttputc(ESC);
+    ttputc('Y');
+    ttputc(row + BIAS);
+    ttputc(col + BIAS);
 }
 
 vt52eeol()
 {
-	ttputc(ESC);
-	ttputc('K');
+    ttputc(ESC);
+    ttputc('K');
 }
 
 vt52eeop()
 {
-	ttputc(ESC);
-	ttputc('J');
+    ttputc(ESC);
+    ttputc('J');
 }
 
 vt52rev(status)
@@ -107,12 +107,12 @@ vt52rev(status)
 int status;			/* TRUE = reverse video, FALSE = normal video */
 
 {
-	/* can't do this here, so we won't */
+    /* can't do this here, so we won't */
 }
 
 vt52cres()
 {				/* change screen resolution - (not here though) */
-	return TRUE;
+    return TRUE;
 }
 
 #if	COLOR
@@ -128,27 +128,27 @@ vt52bcol()
 vt52beep()
 {
 #ifdef  BEL
-	ttputc(BEL);
-	ttflush();
+    ttputc(BEL);
+    ttflush();
 #endif
 }
 
 vt52open()
 {
 #if     V7 | BSD
-	char *cp;
-	char *getenv();
+    char *cp;
+    char *getenv();
 
-	if ((cp = getenv("TERM")) == NULL) {
-		puts("Shell variable TERM not defined!");
-		exit(1);
-	}
-	if (strcmp(cp, "vt52") != 0 && strcmp(cp, "z19") != 0) {
-		puts("Terminal type not 'vt52'or 'z19' !");
-		exit(1);
-	}
+    if ((cp = getenv("TERM")) == NULL) {
+        puts("Shell variable TERM not defined!");
+        exit(1);
+    }
+    if (strcmp(cp, "vt52") != 0 && strcmp(cp, "z19") != 0) {
+        puts("Terminal type not 'vt52'or 'z19' !");
+        exit(1);
+    }
 #endif
-	ttopen();
+    ttopen();
 }
 
 vt52kopen()

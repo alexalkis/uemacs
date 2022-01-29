@@ -10,39 +10,39 @@
 
 /*	possible names and paths of help files under different OSs	*/
 static char *pathname[] =
-#if	MSDOS
-{
-	"emacs.rc",
-	"emacs.hlp",
-	"\\sys\\public\\",
-	"\\usr\\bin\\",
-	"\\bin\\",
-	"\\",
-	""
-};
+#if    MSDOS
+    {
+        "emacs.rc",
+        "emacs.hlp",
+        "\\sys\\public\\",
+        "\\usr\\bin\\",
+        "\\bin\\",
+        "\\",
+        ""
+    };
 #endif
 
 #if AMIGA
-{
-	".emacsrc", "emacs.hlp",
+    {
+        ".emacsrc", "emacs.hlp",
         ""
-};
+    };
 #else
 
 #if	V7 | BSD | USG
 {
-	".emacsrc", "emacs.hlp",
+    ".emacsrc", "emacs.hlp",
 #if	PKCODE
-	    "/usr/global/lib/", "/usr/local/bin/", "/usr/local/lib/",
+        "/usr/global/lib/", "/usr/local/bin/", "/usr/local/lib/",
 #endif
 "/usr/local/", "/usr/lib/", ""};
 #endif
 
 #if	VMS
 {
-	"emacs.rc", "emacs.hlp", "",
+    "emacs.rc", "emacs.hlp", "",
 #if	PKCODE
-	    "sys$login:", "emacs_dir:",
+        "sys$login:", "emacs_dir:",
 #endif
 "sys$sysdevice:[vmstools]"};
 #endif
