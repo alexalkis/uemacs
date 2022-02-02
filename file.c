@@ -195,6 +195,23 @@ int getfile(char *fname, int lockfl) {
   return s;
 }
 
+//#include <ctype.h>
+char *extensionLowerCase(char *filename) {
+  static char buf[80];
+  char *dot = strchr(filename, '.');
+  if (!dot) return NULL;             // return NULL if no dot
+
+  ++dot;                            // go to next char after dot
+  int l = strlen(dot);
+  if (!l || l>79) return NULL;      // if len is 0, then return NULL (dot was last char)
+                                    // oh...also NULL when extension overflows buffer...
+  for(int i=0; i<l; ++i) {
+    buf[i] = tolower(dot[i]);
+  }
+  buf[l] = '\0';
+  return buf;
+}
+
 /*
  * Read file "fname" into the current buffer, blowing away any text
  * found there.  Called by both the read and find commands.  Return
@@ -293,7 +310,13 @@ int readin(char *fname, int lockfl) {
   mlwrite(mesg);
 
   ///TODO: add file extension detection here?
-  curbp->b_mode = MDASM;
+  char *ext = extensionLowerCase(fname);
+  if (ext) {
+    if (!strcmp(ext, "s") || !strcmp(ext, "asm"))
+      curbp->b_mode = MDASM;
+    else if (!strcmp(ext, "c") || !strcmp(ext, "h"))
+      curbp->b_mode = MDCMOD;
+  }
 
   out:
   for (wp = wheadp; wp != NULL; wp = wp->w_wndp) {
