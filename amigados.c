@@ -371,9 +371,12 @@ void ttopen(void) {
   /* set the current sizes */
 
   newwidth(TRUE, (win->Width - (win->BorderLeft + win->BorderRight)) / win->IFont->tf_XSize);
-  //printf("W: %d LeftB: %d RightB: %d [%d]\n", win->Width, win->BorderLeft, win->BorderRight, (win->Width-(win->BorderLeft+win->BorderRight))/8);
+  printf("W: %d LeftB: %d RightB: %d [%d]\n", win->Width, win->BorderLeft, win->BorderRight, (win->Width-(win->BorderLeft+win->BorderRight))/8);
 #define AMIGAMAXLINES 28
-  newsize(TRUE, (win->Height - (win->BorderTop + win->BorderBottom)) / win->IFont->tf_YSize); // alkis - was 23
+  int newh = (win->Height - (win->BorderTop + win->BorderBottom)) / win->IFont->tf_YSize;
+  if (newh>AMIGAMAXLINES)
+    newh = AMIGAMAXLINES;
+  newsize(TRUE, newh); // alkis - was 23
   //printf("alkis -> %d\n",(win->Height-(win->BorderTop+win->BorderBottom))/8);
   //newsize(TRUE, 26); // alkis - was 23
 

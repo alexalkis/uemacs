@@ -15,9 +15,16 @@ int xmkstemp(char *template) {
   return fd;
 }
 
+#include <stdio.h>
 void *xmalloc(size_t size) {
+  static int c = 0;
   void *ret = malloc(size);
-  if (!ret)
+  if (!ret) {
+#ifdef AMIGA
+    printf("Memory allocation failed for %d bytes.\n", size);
+#endif
     die("Out of memory");
+  }
+  //fprintf(stderr, "Got mem %d, req# %d\n", size, ++c);
   return ret;
 }

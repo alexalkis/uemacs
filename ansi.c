@@ -218,6 +218,8 @@ void ansiopen(void) {
   ioctl(STDOUT_FILENO, TIOCGWINSZ, &w);
   term.t_ncol = term.t_mcol = w.ws_col;
   term.t_nrow = term.t_mrow = w.ws_row - 1;
+  printf("%dx%d\n", w.ws_col, w.ws_row-1);
+  ///FIXME: this is wrong for amiga (at least 1.3)
   ttopen();
 }
 
