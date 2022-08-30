@@ -8,6 +8,7 @@
 #include <string.h>
 #include "estruct.h"
 #if    AMIGA
+#include <sys/ttycom.h>
 #include <exec/types.h>
 #include <exec/io.h>
 #include <intuition/intuition.h>
@@ -255,6 +256,14 @@ int in_get(void)    /* get an event from the input buffer */
 
 #define DEPTH 1
 #define NCOLORS (1<<DEPTH)
+#define AMIGAMAXLINES 28
+
+void ttGetSize(struct winsize *w) {
+    w->ws_col = (win->Width - (win->BorderLeft + win->BorderRight)) / win->IFont->tf_XSize;
+    w->ws_row= (win->Height - (win->BorderTop + win->BorderBottom)) / win->IFont->tf_YSize;
+//    if (w->ws_row>AMIGAMAXLINES)
+//        w->ws_row = AMIGAMAXLINES;
+}
 
 void ttopen(void) {
   struct NewWindow new_win;
@@ -371,11 +380,11 @@ void ttopen(void) {
   /* set the current sizes */
 
   newwidth(TRUE, (win->Width - (win->BorderLeft + win->BorderRight)) / win->IFont->tf_XSize);
-  printf("W: %d LeftB: %d RightB: %d [%d]\n", win->Width, win->BorderLeft, win->BorderRight, (win->Width-(win->BorderLeft+win->BorderRight))/8);
-#define AMIGAMAXLINES 28
+  //printf("W: %d LeftB: %d RightB: %d [%d]\n", win->Width, win->BorderLeft, win->BorderRight, (win->Width-(win->BorderLeft+win->BorderRight))/8);
+
   int newh = (win->Height - (win->BorderTop + win->BorderBottom)) / win->IFont->tf_YSize;
-  if (newh>AMIGAMAXLINES)
-    newh = AMIGAMAXLINES;
+//  if (newh>AMIGAMAXLINES)
+//    newh = AMIGAMAXLINES;
   newsize(TRUE, newh); // alkis - was 23
   //printf("alkis -> %d\n",(win->Height-(win->BorderTop+win->BorderBottom))/8);
   //newsize(TRUE, 26); // alkis - was 23

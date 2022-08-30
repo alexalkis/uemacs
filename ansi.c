@@ -198,6 +198,10 @@ void ansiparm(int n) {
 
 #include <sys/ioctl.h>
 #include <unistd.h>
+#ifdef AMIGA
+void ttGetSize(struct winsize *w);
+#endif
+
 void ansiopen(void) {
 #if LINUX
 #elif  V7 | USG | BSD
@@ -215,12 +219,18 @@ void ansiopen(void) {
   strcpy(sres, "NORMAL");
   revexist = TRUE;
   struct winsize w;
+#ifdef AMIGA
+  ttopen();
+  ttGetSize(&w);
+#else
   ioctl(STDOUT_FILENO, TIOCGWINSZ, &w);
+#endif
   term.t_ncol = term.t_mcol = w.ws_col;
   term.t_nrow = term.t_mrow = w.ws_row - 1;
-  printf("%dx%d\n", w.ws_col, w.ws_row-1);
-  ///FIXME: this is wrong for amiga (at least 1.3)
+  //printf("%dx%d\n", w.ws_col, w.ws_row-1);
+#ifndef AMIGA
   ttopen();
+#endif
 }
 
 void ansiclose(void) {
