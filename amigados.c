@@ -14,6 +14,13 @@
 #include <intuition/intuition.h>
 #include <devices/console.h>
 #if !defined(__clang__)
+
+struct  AnalogSignalInterval
+{
+    UWORD       asi_Start;
+    UWORD       asi_Stop;
+};
+
 #include <proto/exec.h>
 #include <proto/dos.h>
 #include <proto/graphics.h>

@@ -8,6 +8,7 @@
  */
 
 #include <stdio.h>
+#include <ctype.h>
 #include <unistd.h>
 
 #include "estruct.h"

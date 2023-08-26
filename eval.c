@@ -673,8 +673,8 @@ char *getval(char *token) {
 
       /* grab the line as an argument */
       blen = bp->b_dotp->l_used - bp->b_doto;
-      if (blen > NSTRING)
-        blen = NSTRING;
+      if (blen >= NSTRING)
+        blen = NSTRING-1;
       strncpy(buf, bp->b_dotp->l_text + bp->b_doto, blen);
       buf[blen] = 0;
 

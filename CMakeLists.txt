@@ -83,6 +83,6 @@ endif(CMAKE_C_COMPILER STREQUAL "/opt/amiga/gcc6/bin/m68k-amigaos-gcc")
 add_custom_command(TARGET uemacs
         POST_BUILD
         COMMAND ${CRANKER_COMMAND}
-        #COMMAND cranker_generic -f uemacs -o em
-        COMMAND ls -l uemacs
+        COMMAND cranker_generic -f uemacs -o em
+        COMMAND ls -l uemacs em
         )
