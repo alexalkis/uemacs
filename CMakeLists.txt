@@ -76,13 +76,17 @@ add_executable(uemacs
 
 if (CMAKE_C_COMPILER STREQUAL "/opt/amiga/gcc6/bin/m68k-amigaos-gcc")
 
+    add_custom_command(TARGET uemacs
+            POST_BUILD
+            COMMAND ${CRANKER_COMMAND}
+            COMMAND cranker_generic -f uemacs -o em
+            COMMAND ls -l uemacs em
+    )
 else()
     target_link_libraries(uemacs "ncurses")
+    add_custom_command(TARGET uemacs
+            POST_BUILD
+            COMMAND ls -l uemacs
+    )
 endif(CMAKE_C_COMPILER STREQUAL "/opt/amiga/gcc6/bin/m68k-amigaos-gcc")
 
-add_custom_command(TARGET uemacs
-        POST_BUILD
-        COMMAND ${CRANKER_COMMAND}
-        COMMAND cranker_generic -f uemacs -o em
-        COMMAND ls -l uemacs em
-        )
