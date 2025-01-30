@@ -12,29 +12,28 @@
 #include <exec/types.h>
 #include <exec/io.h>
 #include <intuition/intuition.h>
-#include <devices/console.h>
-#if !defined(__clang__)
 
-struct  AnalogSignalInterval
-{
-    UWORD       asi_Start;
-    UWORD       asi_Stop;
-};
+#ifdef __CLION_IDE__
+#include <clib/exec_protos.h>
+#include <clib/dos_protos.h>
+#include <clib/graphics_protos.h>
+#include <clib/intuition_protos.h>
+#else
+//struct  AnalogSignalInterval
+//{
+//    UWORD       asi_Start;
+//    UWORD       asi_Stop;
+//};
 
 #include <proto/exec.h>
 #include <proto/dos.h>
 #include <proto/graphics.h>
 #include <proto/intuition.h>
-#else
-#include <clib/exec_protos.h>
-#include <clib/dos_protos.h>
-#include <clib/graphics_protos.h>
-#include <clib/intuition_protos.h>
 #endif
-//#include "etype.h"
+
 #include "edef.h"
 #include "efunc.h"
-//#include "elang.h"
+
 
 #define CTRL    CONTROL        /* Control flag, or'ed in		*/
 #define MOUS    0x1000        /* alternative input device (mouse)	*/
@@ -44,9 +43,8 @@ struct  AnalogSignalInterval
 #define INTUITION_REV    0L
 #define NEW            1006L
 
-struct IntuitionBase *IntuitionBase;
+extern struct IntuitionBase *IntuitionBase;
 struct Window *win;
-
 struct IOStdReq con;        /* ptr to console device driver handle */
 
 //#define USECUSTOMSCREEN
@@ -302,7 +300,7 @@ void ttopen(void) {
   new_win.Type = CUSTOMSCREEN;
 #else
   new_win.Title = (unsigned char *) "uEmacs 4.0.15";
-#include <intuition/iobsolete.h>
+//#include <intuition/iobsolete.h>
 //  new_win.Flags = WINDOWCLOSE | SMART_REFRESH | ACTIVATE |
 //      WINDOWDRAG | WINDOWDEPTH | WINDOWSIZING | SIZEBRIGHT |
 //      RMBTRAP | NOCAREREFRESH;
@@ -900,7 +898,7 @@ int filter(int f, int n) {
   sgarbf = TRUE;
 
   /* on failure, escape gracefully */
-  if (s != TRUE || (readin(filnam2, FALSE) == FALSE)) {
+  if (readin(filnam2, FALSE) == FALSE) {
     mlwrite("[Execution failed]");
     /*                      "[Execution failed]" */
     strcpy(bp->b_fname, tmpnam);
